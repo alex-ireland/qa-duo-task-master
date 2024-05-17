@@ -23,9 +23,3 @@ EXPOSE 5500
 # Create an entrypoint
 
 ENTRYPOINT ["python", "app.py"]
-
-# NGINX
-
-FROM nginx:latest
-
-COPY nginx.conf /etc/nginx/nginx.conf

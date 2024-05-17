@@ -23,6 +23,22 @@ spec:
     targetPort: 80
 
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+data:
+  nginx.conf: |
+    events {}
+    http {
+      server {
+        listen 80;
+        location / {
+          proxy_pass http://flask-app:5000;
+        }
+      }
+    }
+---
 
 apiVersion: apps/v1
 
@@ -63,13 +79,15 @@ spec:
         app: nginx
 
     spec:
-
+      volumes:
+      - name: nginx-config-vol
+        configMap:
+          name: nginx-config
       containers:
-
       - name: nginx-container
-
-        image: stratcastor/flask-nginx:latest
-
+        image: nginx:latest
         ports:
-
         - containerPort: 80
+        volumeMounts:
+        - name: nginx-config-vol
+          mountPath: /etc/nginx
